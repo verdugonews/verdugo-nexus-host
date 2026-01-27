@@ -9,6 +9,12 @@
       "@shared/*": ["./shared/*"]
     }
   },
-  "include": ["src", "shared", "config", "modern.config.ts"],
+  "include": [
+    "src",
+    "shared",
+    "config",
+    "modern.config.ts",
+    "src/routes/products/.tsx"
+  ],
   "exclude": ["**/node_modules"]
 }

@@ -1,0 +1,85 @@
+/* src/routes/notFound.module.css */
+.contenedor {
+  background-color: var(--bg-gray);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.elipse1 {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: var(--coppel-blue);
+  left: -200px;
+  top: -185px;
+  opacity: 0.1;
+}
+.elipseAG {
+  position: absolute;
+  top: 70%;
+  left: 70%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--coppel-yellow);
+  opacity: 0.3;
+}
+
+.errorNumber {
+  font-size: 8rem; /* Ajustado para mejor balance */
+  font-weight: 900;
+  color: var(--coppel-blue);
+  line-height: 1;
+  margin: 0;
+  z-index: 1;
+}
+
+.divider {
+  width: var(--spacing-2xl);
+  height: var(--spacing-sm);
+  background: var(--coppel-yellow);
+  margin: var(--spacing-lg) 0;
+  z-index: 1;
+}
+
+.title {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  z-index: 1;
+}
+
+.description {
+  color: #666;
+  max-width: 500px;
+  margin-bottom: var(--spacing-xl);
+  font-size: 1.1rem;
+  z-index: 1;
+}
+
+.btnBack {
+  padding: var(--spacing-md) var(--spacing-2xl);
+  background-color: var(--coppel-blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s, background-color 0.2s;
+  z-index: 1;
+}
+
+.btnBack:hover {
+  transform: scale(1.05);
+  background-color: var(--coppel-blue-dark);
+}

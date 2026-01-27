@@ -1,0 +1,77 @@
+/* src/components/layout/AuthLayout.module.css */
+.contenedor {
+  background-color: var(--bg-gray);
+  width: 100%;
+  min-height: 100vh;
+  display: flex; /* Crucial para centrar */
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical */
+  overflow: hidden;
+  position: relative;
+}
+
+/* Elipses decorativas institucionales */
+.elipse1 {
+  position: fixed;
+  z-index: 0;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: var(--coppel-blue);
+  left: -200px;
+  top: -185px;
+}
+
+.elipseAC {
+  position: fixed;
+  z-index: 0;
+  top: 30%;
+  left: 29%;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--coppel-yellow);
+}
+
+.elipseAG {
+  position: fixed;
+  z-index: 0;
+  top: 75%;
+  left: 65%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: var(--coppel-yellow);
+}
+
+.elipseCA {
+  position: fixed;
+  z-index: 0;
+  top: 20%;
+  left: 85%;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background: var(--coppel-blue);
+}
+
+/* Logo inferior izquierdo */
+.logoLogin {
+  position: fixed;
+  left: 20px;
+  bottom: 35px;
+  z-index: 1;
+  width: 200px;
+}
+
+.loginCard {
+  background: var(--white);
+  padding: var(--spacing-2xl); /* Antes: 40px */
+  border-radius: var(--radius-card); /* Antes: 40px */
+  box-shadow: var(--shadow-card);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}

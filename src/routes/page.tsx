@@ -1,96 +1,146 @@
-import { Helmet } from '@modern-js/runtime/head';
-import './index.css';
+import { useEffect, useMemo, useState } from 'react';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
+import {
+  IconBell,
+  IconClock,
+  IconFile,
+  IconFolder,
+} from '../components/icons/Icons';
+import { AccountStatus, type UserInfo } from '../models/api.model';
+import { storageService } from '../services/storage.service';
+import styles from './dashboard.module.css';
 
-const Index = () => (
-  <div className="container-box">
-    <Helmet>
-      <link
-        rel="icon"
-        type="image/x-icon"
-        href="https://lf3-static.bytednsdoc.com/obj/eden-cn/uhbfnupenuhf/favicon.ico"
-      />
-    </Helmet>
-    <main>
-      <div className="title">
-        Welcome to
-        <img
-          className="logo"
-          src="https://lf3-static.bytednsdoc.com/obj/eden-cn/zq-uylkvT/ljhwZthlaukjlkulzlp/modern-js-logo.svg"
-          alt="Modern.js Logo"
-        />
-        <p className="name">Modern.js</p>
-      </div>
-      <p className="description">
-        Get started by editing <code className="code">src/routes/page.tsx</code>
-      </p>
-      <div className="grid">
-        <a
-          href="https://modernjs.dev/guides/get-started/introduction.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="card"
-        >
-          <h2>
-            Guide
-            <img
-              className="arrow-right"
-              src="https://lf3-static.bytednsdoc.com/obj/eden-cn/zq-uylkvT/ljhwZthlaukjlkulzlp/arrow-right.svg"
-              alt="Guide"
-            />
-          </h2>
-          <p>Follow the guides to use all features of Modern.js.</p>
-        </a>
-        <a
-          href="https://modernjs.dev/tutorials/foundations/introduction.html"
-          target="_blank"
-          className="card"
-          rel="noreferrer"
-        >
-          <h2>
-            Tutorials
-            <img
-              className="arrow-right"
-              src="https://lf3-static.bytednsdoc.com/obj/eden-cn/zq-uylkvT/ljhwZthlaukjlkulzlp/arrow-right.svg"
-              alt="Tutorials"
-            />
-          </h2>
-          <p>Learn to use Modern.js to create your first application.</p>
-        </a>
-        <a
-          href="https://modernjs.dev/configure/app/usage.html"
-          target="_blank"
-          className="card"
-          rel="noreferrer"
-        >
-          <h2>
-            Config
-            <img
-              className="arrow-right"
-              src="https://lf3-static.bytednsdoc.com/obj/eden-cn/zq-uylkvT/ljhwZthlaukjlkulzlp/arrow-right.svg"
-              alt="Config"
-            />
-          </h2>
-          <p>Find all configuration options provided by Modern.js.</p>
-        </a>
-        <a
-          href="https://github.com/web-infra-dev/modern.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="card"
-        >
-          <h2>
-            GitHub
-            <img
-              className="arrow-right"
-              src="https://lf3-static.bytednsdoc.com/obj/eden-cn/zq-uylkvT/ljhwZthlaukjlkulzlp/arrow-right.svg"
-              alt="Github"
-            />
-          </h2>
-          <p>View the source code on GitHub; feel free to contribute.</p>
-        </a>
-      </div>
-    </main>
-  </div>
-);
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; color: string; desc: string }
+> = {
+  [AccountStatus.PENDING]: {
+    label: 'Validación Pendiente',
+    color: 'var(--coppel-yellow)',
+    desc: 'Tu cuenta está siendo revisada por el equipo comercial de Coppel.',
+  },
+  [AccountStatus.ACTIVE]: {
+    label: 'Cuenta Activa',
+    color: 'var(--color-success)',
+    desc: 'Ya puedes gestionar tus servicios en la plataforma.',
+  },
+  Default: {
+    label: 'Estado Desconocido',
+    color: 'var(--neutral-medium)',
+    desc: 'Contacta a soporte si tienes dudas sobre el estatus de tu acceso.',
+  },
+};
 
-export default Index;
+export default function DashboardPage() {
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(true);
+
+  useEffect(() => {
+    const userInfo = storageService.getUserInfo();
+    if (userInfo) {
+      setUser(userInfo);
+    }
+    setIsDataLoading(false);
+  }, []);
+
+  const currentStatus =
+    STATUS_CONFIG[user?.status as string] || STATUS_CONFIG.Default;
+
+  const kpis = useMemo(
+    () => [
+      {
+        id: 'kpi-files',
+        label: 'Mis Solicitudes',
+        value: '1',
+        icon: <IconFile />,
+        color: 'var(--coppel-blue)',
+      },
+      {
+        id: 'kpi-docs',
+        label: 'Documentos Pendientes',
+        value: user?.status === AccountStatus.PENDING ? '4' : '0',
+        icon: <IconFolder />,
+        color: 'var(--coppel-yellow)',
+      },
+      {
+        id: 'kpi-bell',
+        label: 'Notificaciones',
+        value: '2',
+        icon: <IconBell />,
+        color: 'var(--coppel-blue)',
+      },
+      {
+        id: 'kpi-clock',
+        label: 'Días en Proceso',
+        value: '3',
+        icon: <IconClock />,
+        color: 'var(--neutral-medium)',
+      },
+    ],
+    [user?.status],
+  );
+
+  if (isDataLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={`${styles.skeleton} ${styles.skeletonBanner}`} />
+        <div className={`${styles.skeleton} ${styles.skeletonTitle}`} />
+        <div className={styles.kpiGrid}>
+          {[1, 2, 3, 4].map(i => (
+            <div
+              key={i}
+              className={`${styles.skeleton} ${styles.skeletonKpi}`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <ErrorBoundary
+        fallback={
+          <div className={styles.banner}>
+            Error al cargar el resumen del perfil.
+          </div>
+        }
+      >
+        <div
+          className={styles.banner}
+          style={{ borderLeftColor: currentStatus.color }}
+        >
+          {/* Contenido */}
+        </div>
+      </ErrorBoundary>
+
+      <h2 className={styles.sectionTitle}>Resumen de Actividad</h2>
+
+      <ErrorBoundary
+        fallback={
+          <div className={styles.kpiGrid}>
+            Error al cargar los indicadores de actividad.
+          </div>
+        }
+      >
+        <div className={styles.kpiGrid}>
+          {kpis.map(kpi => (
+            <div
+              key={kpi.id}
+              className={styles.kpiCard}
+              style={{ borderLeftColor: kpi.color }}
+            >
+              <span className={styles.kpiLabel}>{kpi.label}</span>
+              <div className={styles.kpiContent}>
+                <span className={styles.kpiValue}>{kpi.value}</span>
+                <span className={styles.kpiIcon} style={{ color: kpi.color }}>
+                  {kpi.icon}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ErrorBoundary>
+    </div>
+  );
+}

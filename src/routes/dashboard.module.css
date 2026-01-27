@@ -1,0 +1,186 @@
+/* src/routes/dashboard.module.css */
+.container {
+  padding: 10px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Banner de Bienvenida con ADN Coppel */
+.banner {
+  background: var(--white);
+  padding: var(--spacing-xl); /* Antes: 30px */
+  border-radius: var(--radius-lg); /* Antes: 12px */
+  box-shadow: var(--shadow-md); /* Antes: 0 4px 15px... */
+  margin-bottom: var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  border-left-width: 8px;
+  border-left-style: solid;
+  transition: transform 0.3s ease;
+}
+
+.banner:hover {
+  transform: scale(1.01);
+}
+
+.welcomeTitle {
+  color: var(--neutral-dark);
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.welcomeTitle span {
+  color: var(--coppel-blue);
+}
+
+.welcomeDesc {
+  color: var(--neutral-medium);
+  font-size: 1rem;
+}
+
+.statusBadge {
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Sección de KPIs */
+.sectionTitle {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.kpiCard {
+  background: var(--white);
+  padding: var(--spacing-lg); /* Antes: 20px */
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border-left-width: 6px;
+  border-left-style: solid;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.kpiLabel {
+  font-size: 0.9rem;
+  color: var(--neutral-medium);
+  font-weight: 500;
+}
+
+.kpiContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.kpiValue {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--neutral-dark);
+}
+
+.kpiIcon {
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.warningBox {
+  margin-top: 30px;
+  padding: 25px;
+  background: var(--color-warning-bg);
+  border-radius: 12px;
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
+}
+
+.warningTitle {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warningList {
+  padding-left: 20px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.skeleton {
+  background: #f6f7f8;
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 800px 100%;
+  display: inline-block;
+  position: relative;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeletonBanner {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.skeletonTitle {
+  width: 200px;
+  height: 28px;
+  margin-bottom: 20px;
+}
+.skeletonKpi {
+  width: 100%;
+  height: 110px;
+  border-radius: 12px;
+}
