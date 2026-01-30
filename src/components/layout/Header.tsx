@@ -2,14 +2,28 @@ import { Link, useNavigate } from '@modern-js/runtime/router';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { authService } from '../../services/auth.service';
-import { LockIcon, LogoutIcon } from '../icons/Icons';
+import { CloseIcon, LockIcon, LogoutIcon, MenuIcon } from '../icons/Icons';
 import styles from './Header.module.css';
 
-export const Header = () => {
+interface HeaderProps {
+  onToggle: () => void;
+  isCollapsed: boolean;
+}
+
+export const Header = ({ onToggle, isCollapsed }: HeaderProps) => {
   const { user, logout: localLogout } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   const handleLogout = async () => {
     try {
@@ -35,60 +49,80 @@ export const Header = () => {
 
   return (
     <header className={styles.topHeader}>
-      <h3 className={styles.sectionTitle}>
-        Verdugo Nexus{' '}
-        <span
-          style={{ fontWeight: 'normal', color: '#666', fontSize: '0.9rem' }}
+      <div className={styles.leftHeader}>
+        <button
+          type="button"
+          className={styles.menuBtn}
+          onClick={onToggle}
+          title={isCollapsed ? 'Expandir menú' : 'Contraer menú'}
         >
-          | Abastecimiento
-        </span>
-      </h3>
+          {isCollapsed ? <MenuIcon /> : <CloseIcon />}
+        </button>
+        <h3 className={styles.sectionTitle}>
+          Verdugo Nexus <span className={styles.subtitle}>| Shell</span>
+        </h3>
+      </div>
 
-      <div className={styles.profileMenu} ref={dropdownRef}>
-        <div className={styles.profileMenu} ref={dropdownRef}>
-          <button
-            type="button" // Cambiado div por button semántico
-            className={styles.profileTrigger}
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
-            aria-haspopup="true"
-            aria-expanded={isDropdownOpen}
-          >
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>{user?.name || 'Usuario'}</span>
-              <span className={styles.userRole}>{user?.role}</span>
-            </div>
-            <span className={styles.chevron}>{isDropdownOpen ? '▲' : '▼'}</span>
-          </button>
-        </div>
+      <div className={styles.profileContainer} ref={dropdownRef}>
+        <button
+          type="button"
+          className={`${styles.profileTrigger} ${isDropdownOpen ? styles.activeTrigger : ''}`}
+          onClick={() => setDropdownOpen(!isDropdownOpen)}
+        >
+          <div className={styles.avatarCircle}>
+            {getInitials(user?.name || 'U')}
+          </div>
+          <div className={styles.triggerInfo}>
+            <span className={styles.triggerName}>
+              {user?.name?.split(' ')[0]}
+            </span>
+            <span className={styles.triggerChevron}>
+              {isDropdownOpen ? '▲' : '▼'}
+            </span>
+          </div>
+        </button>
 
         <div
-          className={`${styles.dropdownCard} ${isDropdownOpen ? styles.show : ''}`}
+          className={`${styles.profileDropdown} ${isDropdownOpen ? styles.showDropdown : ''}`}
         >
-          <div className={styles.dropdownHeader}>Mi Cuenta</div>
+          <div className={styles.dropdownUserHeader}>
+            <div className={styles.headerAvatar}>
+              {getInitials(user?.name || 'U')}
+            </div>
+            <div className={styles.headerText}>
+              <span className={styles.fullName}>{user?.name}</span>
+              <span className={styles.userEmail}>
+                {user?.email || 'usuario@coppel.com'}
+              </span>
+              <span className={styles.badgeRole}>{user?.role}</span>
+            </div>
+          </div>
 
-          <Link
-            to="/change-password"
-            className={styles.dropdownItem}
-            onClick={() => setDropdownOpen(false)}
-          >
-            <span className={styles.itemIcon}>
-              <LockIcon />
-            </span>
-            Cambiar Contraseña
-          </Link>
+          <div className={styles.dropdownBody}>
+            <Link
+              to="/change-password"
+              className={styles.menuItem}
+              onClick={() => setDropdownOpen(false)}
+            >
+              <div className={styles.iconBox}>
+                <LockIcon />
+              </div>
+              <span>Seguridad y Contraseña</span>
+            </Link>
 
-          <div className={styles.dropdownDivider} />
+            <div className={styles.menuDivider} />
 
-          <button
-            type="button"
-            className={`${styles.dropdownItem} ${styles.logoutBtn}`}
-            onClick={handleLogout}
-          >
-            <span className={styles.itemIcon}>
-              <LogoutIcon />
-            </span>
-            Cerrar Sesión
-          </button>
+            <button
+              type="button"
+              className={`${styles.menuItem} ${styles.logoutItem}`}
+              onClick={handleLogout}
+            >
+              <div className={styles.iconBox}>
+                <LogoutIcon />
+              </div>
+              <span>Cerrar Sesión</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

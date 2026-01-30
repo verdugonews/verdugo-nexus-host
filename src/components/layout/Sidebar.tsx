@@ -1,73 +1,94 @@
 import { Link, useLocation } from '@modern-js/runtime/router';
-import { APP_ROUTES } from '../../constants/routes';
-import { useAuth } from '../../hooks/useAuth';
-import { UserRole } from '../../models/api.model';
 import {
-  DashboardIcon,
-  ProductsIcon,
-  SuppliersIcon,
-  UsersIcon,
-} from '../icons/Icons';
+  type CSSProperties,
+  type ComponentType,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {
+  type MfeModuleConfig,
+  configService,
+} from '../../services/config.service';
+import * as Icons from '../icons/Icons';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS = [
-  {
-    label: 'Dashboard Principal',
-    path: APP_ROUTES.HOME,
-    roles: [UserRole.ADMIN, UserRole.USER, UserRole.PROSPECTO],
-    icon: <DashboardIcon />,
-  },
-  {
-    label: 'Gestión de Proveedores',
-    path: '/suppliers',
-    roles: [UserRole.ADMIN, UserRole.USER],
-    icon: <SuppliersIcon />,
-  },
-  {
-    label: 'Catálogo de Productos',
-    path: '/products',
-    roles: [UserRole.ADMIN, UserRole.USER],
-    icon: <ProductsIcon />,
-  },
-  {
-    label: 'Control de Usuarios',
-    path: '/users',
-    roles: [UserRole.ADMIN],
-    icon: <UsersIcon />,
-  },
-];
-
-export const Sidebar = () => {
-  const { user } = useAuth();
+export const Sidebar = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const [modules, setModules] = useState<MfeModuleConfig[]>([]);
   const location = useLocation();
 
-  const authorizedItems = NAV_ITEMS.filter(
-    item => user?.role && item.roles.includes(user.role as UserRole),
-  );
+  useEffect(() => {
+    configService.getAvailableModules().then(setModules);
+  }, []);
+
+  const groupedModules = useMemo(() => {
+    const groups: Record<string, { color: string; items: MfeModuleConfig[] }> =
+      {};
+    for (const m of modules) {
+      if (!groups[m.category]) {
+        groups[m.category] = { color: m.categoryColor, items: [] };
+      }
+      groups[m.category].items.push(m);
+    }
+    return groups;
+  }, [modules]);
 
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.brand}>
-        Coppel<span style={{ color: 'var(--coppel-yellow)' }}>.</span>
+    <aside
+      className={`${styles.sidebar} ${isCollapsed ? styles.isCollapsed : ''}`}
+    >
+      <div className={styles.brandContainer}>
+        <Icons.NexusLogoIcon />
+        {!isCollapsed && (
+          <span className={styles.brandName}>
+            Nexus<span>.</span>
+          </span>
+        )}
       </div>
 
-      <nav className={styles.navLinks} aria-label="Navegación Principal">
-        {authorizedItems.map(item => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`${styles.navItem} ${
-              location.pathname === item.path ? styles.active : ''
-            }`}
+      <nav className={styles.navLinks}>
+        <Link
+          to="/"
+          className={`${styles.navItem} ${styles.dashboardItem} ${location.pathname === '/' ? styles.active : ''}`}
+        >
+          <div className={styles.navIcon}>
+            <Icons.DashboardIcon />
+          </div>
+          {!isCollapsed && <span>Dashboard</span>}
+        </Link>
+
+        {Object.entries(groupedModules).map(([category, data]) => (
+          <div
+            key={category}
+            className={styles.categorySection}
+            style={{ '--category-accent': data.color } as CSSProperties}
           >
-            <span className={styles.navIcon}>{item.icon}</span>
-            {item.label}
-          </Link>
+            {!isCollapsed && (
+              <div className={styles.categoryTitle}>{category}</div>
+            )}
+            {data.items.map(mfe => {
+              const IconComp =
+                (Icons as Record<string, ComponentType>)[mfe.icon] ||
+                Icons.IconFolder;
+              return (
+                <Link
+                  key={mfe.id}
+                  to={mfe.path}
+                  className={`${styles.navItem} ${location.pathname.startsWith(mfe.path) ? styles.active : ''}`}
+                >
+                  <div className={styles.navIcon}>
+                    <IconComp />
+                  </div>
+                  {!isCollapsed && <span>{mfe.label}</span>}
+                </Link>
+              );
+            })}
+          </div>
         ))}
       </nav>
 
       <div className={styles.sidebarFooter}>
-        <span className={styles.roleTag}>{user?.role}</span>
+        {!isCollapsed && <span className={styles.roleTag}>Nexus Shell</span>}
       </div>
     </aside>
   );

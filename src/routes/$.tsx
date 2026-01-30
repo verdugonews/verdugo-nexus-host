@@ -1,31 +1,9 @@
-import { useNavigate } from '@modern-js/runtime/router';
-import styles from './NotFound.module.css';
+import { useLocation } from '@modern-js/runtime/router';
+import { MfeLoader } from '../components/common/MfeLoader';
 
-export default function NotFoundPage() {
-  const navigate = useNavigate();
-
-  return (
-    <div className={styles.contenedor}>
-      <div className={styles.elipse1} />
-      <div className={styles.elipseAG} />
-
-      <h1 className={styles.errorNumber}>404</h1>
-      <div className={styles.divider} />
-
-      <h2 className={styles.title}>Sección no encontrada</h2>
-
-      <p className={styles.description}>
-        Lo sentimos, la sección de <strong>Verdugo Nexus</strong> que buscas no
-        existe o ha sido movida.
-      </p>
-
-      <button
-        type="button"
-        onClick={() => navigate('/')}
-        className={styles.btnBack}
-      >
-        Volver al Panel Principal
-      </button>
-    </div>
-  );
+export default function UniversalBridge() {
+  const location = useLocation();
+  const mfeScope = location.pathname.split('/').filter(Boolean)[0];
+  if (!mfeScope) return null;
+  return <MfeLoader scope={mfeScope} />;
 }

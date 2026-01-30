@@ -1,11 +1,11 @@
-/* host-app/src/routes/layout.tsx */
+/* verdugo-nexus-host/src/routes/layout.tsx */
 import { Outlet, useLocation, useNavigate } from '@modern-js/runtime/router';
-import { useEffect, useMemo, useRef } from 'react'; // useRef añadido
+import { useEffect, useMemo, useRef } from 'react';
 import { Toaster } from 'sonner';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { ErrorMaster } from '../components/common/ErrorMaster';
 import GlobalLoading from '../components/globalLoading';
-import { AppShell } from '../components/layout/AppShell';
+import { AppShell } from '../components/layout/AppShell'; // Importante: Importar el Shell
 import { APP_ROUTES } from '../constants/routes';
 import { useAuth } from '../hooks/useAuth';
 import './index.css';
@@ -14,9 +14,8 @@ export default function RootLayout() {
   const { isAuthenticated, loading, initSession } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const isInitialized = useRef(false); // Silver Bullet para evitar bucles
+  const isInitialized = useRef(false);
 
-  // Inicialización única absoluta
   useEffect(() => {
     if (!isInitialized.current) {
       initSession();
@@ -35,7 +34,6 @@ export default function RootLayout() {
     return publicRoutes.includes(location.pathname);
   }, [location.pathname]);
 
-  // Guardia de navegación reactiva
   useEffect(() => {
     if (!loading) {
       if (!isAuthenticated && !isPublicRoute) {
@@ -50,9 +48,7 @@ export default function RootLayout() {
     return (
       <div className="root-loader-container">
         <div className="root-loader-spinner" />
-        <span className="nexus-loading-subtext">
-          Iniciando Verdugo Nexus...
-        </span>
+        <span className="nexus-loading-subtext">Cargando Nexus...</span>
       </div>
     );
   }
@@ -61,6 +57,7 @@ export default function RootLayout() {
     <ErrorBoundary fallback={<ErrorMaster />}>
       <Toaster position="bottom-right" richColors closeButton theme="light" />
       <GlobalLoading />
+      {/* Si es login/público, va pelón. Si es privado, lleva el AppShell siempre */}
       {isPublicRoute ? (
         <div className="auth-wrapper">
           <Outlet />

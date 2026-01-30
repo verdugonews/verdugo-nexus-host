@@ -1,143 +1,231 @@
+/* verdugo-nexus-host/src/components/layout/Header.module.css */
 .topHeader {
   background: var(--white);
-  padding: 0 var(--spacing-xl); /* Antes: 32px */
+  height: 64px;
+  padding: 0 var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
-  box-shadow: var(--shadow-sm); /* Antes: 0 2px 10px... */
+  border-bottom: 1px solid var(--neutral-border-soft);
   position: relative;
-  z-index: 100;
+  z-index: 1000;
+}
+
+.leftHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.menuBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--coppel-blue);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menuBtn:hover {
+  background: #f0f4ff;
+  transform: scale(1.05);
 }
 
 .sectionTitle {
   font-size: 1.1rem;
   color: var(--coppel-blue);
-  font-weight: bold;
+  font-weight: 800;
+}
+.subtitle {
+  font-weight: 400;
+  color: var(--neutral-medium);
+  font-size: 0.85rem;
 }
 
-.profileMenu {
+/* Profile Trigger (Botón del Header) */
+.profileContainer {
   position: relative;
 }
 
 .profileTrigger {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm); /* Antes: 12px */
+  gap: 10px;
+  padding: 6px 14px;
+  background: #f8fafc;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-md); /* Antes: 8px */
-  transition: background 0.2s;
+  transition: all 0.2s ease-in-out;
 }
-.profileTrigger:hover {
-  background: #f4f6f8;
+.profileTrigger:hover,
+.activeTrigger {
+  background: var(--white);
+  border-color: var(--neutral-border);
+  box-shadow: var(--shadow-sm);
 }
 
-.userInfo {
+.avatarCircle {
+  width: 32px;
+  height: 32px;
+  background: var(--coppel-blue);
+  color: var(--white);
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  text-align: right;
-}
-
-.userName {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: #333;
-}
-
-.userRole {
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
-  color: #666;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 700;
 }
 
-.chevron {
-  opacity: 0.5;
-  font-size: 0.7rem;
+.triggerName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.triggerChevron {
+  font-size: 0.6rem;
+  opacity: 0.4;
+  transition: transform 0.2s;
+}
+.activeTrigger .triggerChevron {
+  transform: rotate(180deg);
 }
 
-.dropdownCard {
+/* Perfil Card (Dropdown) */
+.profileDropdown {
   position: absolute;
   top: 52px;
   right: 0;
+  width: 290px;
   background: var(--white);
-  min-width: 220px;
-  border-radius: var(--radius-lg); /* Antes: 12px */
-  box-shadow: var(--shadow-lg); /* Antes: 0 10px 25px... */
-  border: 1px solid var(--bg-gray);
-  display: none;
-  flex-direction: column;
-  z-index: 1001;
+  border-radius: var(--radius-lg); /* Bordes redondeados solicitados */
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  animation: slideUp 0.2s ease-out;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.showDropdown {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.show {
+.dropdownUserHeader {
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.dropdownHeader {
-  padding: 12px 20px;
-  font-size: 0.75rem;
-  color: #999;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.dropdownItem {
+.headerAvatar {
+  width: 56px;
+  height: 56px;
+  background: var(--coppel-yellow);
+  color: var(--coppel-blue-dark);
+  border-radius: 18px; /* Estilo 'Squircle' moderno */
   display: flex;
   align-items: center;
-  padding: 12px 20px;
-  color: #333;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(240, 210, 36, 0.3);
+}
+
+.fullName {
+  display: block;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 1rem;
+}
+.userEmail {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--neutral-medium);
+  margin-bottom: 8px;
+}
+.badgeRole {
+  background: #e0e7ff;
+  color: var(--coppel-blue);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+
+/* Cuerpo y Menú con Interacción de Color */
+.dropdownBody {
+  padding: 10px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: var(--neutral-text);
+  border-radius: var(--radius-md);
   transition: all 0.2s;
-  cursor: pointer;
   border: none;
   background: none;
   width: 100%;
+  cursor: pointer;
 }
 
-.itemIcon {
+/* EFECTO DE COLOR BAJO EL CURSOR (Hover) */
+.menuItem:hover {
+  background: #f0f4ff; /* Color Coppel suave */
+  color: var(--coppel-blue);
+  transform: translateX(4px); /* Sutil desplazamiento dinámico */
+}
+
+.iconBox {
+  width: 32px;
+  height: 32px;
+  background: #f8fafc;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  margin-right: 12px;
-  opacity: 0.7;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--neutral-medium);
 }
 
-.dropdownItem:hover {
-  background: #f4f6f8;
+.menuItem:hover .iconBox {
+  background: var(--white);
   color: var(--coppel-blue);
+  box-shadow: var(--shadow-sm);
 }
 
-.dropdownItem:hover .itemIcon {
-  opacity: 1;
-}
-
-.dropdownDivider {
+.menuDivider {
   height: 1px;
-  background: #f0f0f0;
+  background: #f1f5f9;
+  margin: 8px 10px;
 }
 
-.logoutBtn {
-  color: #d93025 !important;
+/* Logout con tono rojo moderno */
+.logoutItem {
+  color: var(--color-error);
 }
-
-.logoutBtn:hover {
-  background: #fff1f0 !important;
+.logoutItem:hover {
+  background: #fff1f0;
+  color: var(--color-error);
+}
+.logoutItem:hover .iconBox {
+  color: var(--color-error);
+  background: var(--white);
 }

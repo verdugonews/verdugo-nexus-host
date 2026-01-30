@@ -1,82 +1,143 @@
+/* verdugo-nexus-host/src/components/layout/Sidebar.module.css */
 .sidebar {
   width: 260px;
   background-color: var(--coppel-blue);
-  color: var(--white);
   display: flex;
   flex-direction: column;
   height: 100vh;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  z-index: 100;
 }
 
-.brand {
-  padding: var(--spacing-lg);
+.isCollapsed {
+  width: 80px;
+}
+
+.brandContainer {
+  padding: 0 var(--spacing-lg);
+  height: 64px;
   background-color: var(--coppel-blue-dark);
-  font-size: 1.6rem;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  letter-spacing: -0.5px;
+}
+
+.isCollapsed .brandContainer {
+  justify-content: center;
+  padding: 0;
+}
+
+.brandName {
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.brandName span {
+  color: var(--coppel-yellow);
 }
 
 .navLinks {
   padding: var(--spacing-md) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
   flex: 1;
+  overflow-y: auto;
+}
+
+.categoryTitle {
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm)
+    var(--spacing-lg);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  /* Usamos el color de la categoría para una línea sutil al lado */
+  border-left: 3px solid var(--category-color);
+}
+
+.navItem.active {
+  background: #f1f5f9;
+  /* El color del texto e icono cambia según la categoría cuando está activo */
+  color: var(--category-color);
+}
+
+.navItem.active .navIcon {
+  color: var(--category-color);
 }
 
 .navItem {
   padding: var(--spacing-md) var(--spacing-lg);
   color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  font-weight: 500;
-  border-left: 4px solid transparent;
   display: flex;
   align-items: center;
+  text-decoration: none;
   transition: all 0.2s ease;
-  font-size: 0.95rem;
+  border-left: 4px solid transparent;
+  white-space: nowrap;
+}
+
+.isCollapsed .navItem {
+  justify-content: center;
+  padding: var(--spacing-md) 0;
 }
 
 .navItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
   color: var(--white);
+  /* Hover dinámico según color de categoría */
+  border-left-color: var(--category-accent);
+}
+
+.navIcon {
+  min-width: 24px;
+  display: flex;
+  justify-content: center;
+}
+.navItem span {
+  margin-left: var(--spacing-md);
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .active {
   background-color: rgba(255, 255, 255, 0.15);
-  color: var(--coppel-yellow);
-  border-left-color: var(--coppel-yellow);
-}
-
-.navIcon {
-  margin-right: var(--spacing-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
-  width: 24px;
+  /* Resaltado dinámico según color de categoría */
+  color: var(--category-accent);
+  border-left-color: var(--category-accent);
 }
 
 .active .navIcon {
-  opacity: 1;
-  color: var(--coppel-yellow);
+  color: inherit;
 }
 
-.sidebarFooter {
-  padding: var(--spacing-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
+.dashboardItem {
+  margin-bottom: var(--spacing-lg); /* Separación del Dashboard */
+  position: relative;
 }
 
-.roleTag {
-  font-size: 0.7rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: var(--spacing-xs) var(--spacing-md);
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-full);
-  color: var(--coppel-yellow);
-  display: inline-block;
+/* Línea divisoria sutil después del Dashboard */
+.dashboardItem::after {
+  content: "";
+  position: absolute;
+  bottom: calc(var(--spacing-md) * -1);
+  left: var(--spacing-lg);
+  right: var(--spacing-lg);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.isCollapsed .dashboardItem::after {
+  left: 15px;
+  right: 15px;
+}
+
+.categorySection {
+  margin-top: var(--spacing-sm); /* Espacio extra sobre el título de categoría */
+  margin-bottom: var(--spacing-md);
 }

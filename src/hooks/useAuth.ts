@@ -1,5 +1,5 @@
+/* verdugo-nexus-host/src/hooks/useAuth.ts */
 import { useModel } from '@modern-js/runtime/model';
-/* host-app/src/hooks/useAuth.ts */
 import { useCallback, useMemo } from 'react';
 import type { UserInfo } from '../models/api.model';
 import { storageService } from '../services/storage.service';
@@ -9,11 +9,8 @@ import { NEXUS_EVENTS, emitNexusEvent } from '../utils/events';
 export const useAuth = () => {
   const [state, actions] = useModel(authModel);
 
-  /** * Inicialización estable de la sesión.
-   * Se añade validación física de state.loading para romper bucles infinitos.
-   */
   const initSession = useCallback(() => {
-    // PROTECCIÓN CRÍTICA: Si ya no estamos cargando, no re-inicializar
+    // Si ya no estamos cargando, significa que la sesión ya se procesó.
     if (!state.loading) return;
 
     const token = storageService.getToken();
@@ -23,6 +20,7 @@ export const useAuth = () => {
       actions.setAuth({ user, isAuthenticated: true });
       emitNexusEvent(NEXUS_EVENTS.USER_UPDATED, user);
     } else {
+      // Si no hay token, marcamos sesión como inválida pero terminamos la carga
       actions.setAuth({ user: null, isAuthenticated: false });
     }
   }, [actions, state.loading]);
@@ -43,7 +41,6 @@ export const useAuth = () => {
     [actions],
   );
 
-  // Memoización del objeto de retorno para estabilidad del App Shell
   return useMemo(
     () => ({
       user: state.user,

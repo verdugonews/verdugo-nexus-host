@@ -28,6 +28,7 @@
     "@modern-js/plugin-garfish": "2.69.4",
     "@modern-js/plugin-state": "2.69.4",
     "@modern-js/runtime": "2.69.4",
+    "@module-federation/runtime": "^0.23.0",
     "axios": "^1.13.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
